@@ -21,6 +21,7 @@ from pathlib import Path
 
 # Entry-point node ids the game starts graphs from (see scripts/game.gd).
 KNOWN_ENTRIES = {"logbook", "radio", "door", "start"}
+JOURNAL_ENTRY_PREFIX = "entry_"
 
 ROOT = Path(__file__).resolve().parent.parent
 DIALOGUE_DIR = ROOT / "data" / "dialogue"
@@ -45,7 +46,18 @@ def reachable(graph: dict, entries: set[str]) -> set[str]:
                 stack.append(t)
     return seen
 
-
+def _validate_discover_log(val: object, context: str, errors: list[str]) -> None:
+	if val is None:
+		return
+		if isinstance(val, str):
+			if not val.startswith(JOURNAL_ENTRY_PREFIX) or len(val) <= len(JOURNAL_ENTRY_PREFIX):
+				errors.append(f"{context}: 'discover_log' must be a non-empty '{JOURNAL_ENTRY_PREFIX}*' id")
+    elif isinstance(val, list):
+        if len(val) == 0 or any(not isinstance(x, str) or not x.startswith(JOURNAL_ENTRY_PREFIX) or len(x) <= len(JOURNAL_ENTRY_PREFIX) for x in val):
+        	errors.append(f"{context}: 'discover_log' list must contain non-empty '{JOURNAL_ENTRY_PREFIX}*' ids")
+		else:
+			errors.append(f"{context}: 'discover_log' must be a string or list of strings")
+			
 def validate_file(path: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -63,6 +75,7 @@ def validate_file(path: Path) -> tuple[list[str], list[str]]:
         if not isinstance(node, dict):
             errors.append(f"{path.name}:{nid}: node must be an object")
             continue
+        _validate_discover_log(node.get("discover_log"), f"{path.name}:{nid}", errors)
 
         has_choices = isinstance(node.get("choices"), list) and len(node["choices"]) > 0
         has_next = "next" in node
@@ -83,6 +96,7 @@ def validate_file(path: Path) -> tuple[list[str], list[str]]:
                 if not isinstance(choice, dict) or "text" not in choice:
                     errors.append(f"{path.name}:{nid}: choice #{i} needs a 'text' field")
                     continue
+                _validate_discover_log(choice.get("discover_log"), f"{path.name}:{nid}:choice#{i}", errors)
                 target = choice.get("next")
                 if target is not None and (not isinstance(target, str) or target not in graph):
                     errors.append(f"{path.name}:{nid}: choice #{i} 'next' -> missing node '{target}'")
