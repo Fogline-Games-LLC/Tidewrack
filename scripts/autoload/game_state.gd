@@ -92,6 +92,10 @@ func load_game() -> bool:
 	if journal != null:
 		if version < 2:
 			journal.clear()
+			if flags.has("skeptic") or flags.has("believer") or flags.has("trusted_edith"):
+				journal.discover("entry_edith_logbook")
+			if bool(flags.get("radioed_tom", false)):
+				journal.discover("entry_tom_radio_edith")
 		else:
 			journal.deserialize(data.get("journal", {}))
 
