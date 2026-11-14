@@ -7,7 +7,8 @@
 	"logbook_2": {
 		"speaker": "Edith Vane",
 		"text": "\"Third night of fog. There is a light off the north rocks that answers mine. It is not the buoy. It is not a ship. It keeps my rhythm — three flashes, then dark — and I have told no one because there is no one out there to tell.\"",
-		"next": "logbook_choice1"
+		"next": "logbook_choice1",
+		"discover_log": "entry_edith_logbook"
 	},
 	"logbook_choice1": {
 		"speaker": "",
@@ -66,7 +67,8 @@
 	"radio_edith": {
 		"speaker": "Tom Salish",
 		"text": "The line goes quiet a moment. \"...Edith. Yeah. I ran her last supply out and she wouldn't come to the dock. Just waved from the gallery. You find anything in that logbook, you tell me first. Not the county. Me.\"",
-		"next": null
+		"next": null,
+		"discover_log": "entry_tom_radio_edith"
 	},
 	"radio_checkin": {
 		"speaker": "Tom Salish",
@@ -76,6 +78,7 @@
 	"door": {
 		"speaker": "",
 		"text": "The spiral stair climbs into the dark toward the lamp room. The great light is dead — no oil, no spark, no reason it should have gone out. Until you relight it, the water past the rocks stays invisible. (The lamp room is the next chapter.)",
-		"next": null
+		"next": null,
+		"discover_log": "entry_dead_lamp"
 	}
 }

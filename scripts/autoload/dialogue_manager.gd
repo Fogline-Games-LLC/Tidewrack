@@ -54,6 +54,7 @@ func choose(index: int) -> void:
 		return
 	var choice: Dictionary = choices[index]
 	_apply_flags(choice.get("set_flag", {}))
+	_apply_journal(choice.get("discover_log", null))
 	var next: Variant = choice.get("next", null)
 	if next == null:
 		_finish()
@@ -69,6 +70,7 @@ func _goto(id: String) -> void:
 	_current_id = id
 	var node: Dictionary = _graph[id]
 	_apply_flags(node.get("set_flag", {}))
+	_apply_journal(node.get("discover_log", null))
 	line_shown.emit(
 		str(node.get("speaker", "")),
 		str(node.get("text", "")),
@@ -80,6 +82,18 @@ func _apply_flags(dict: Dictionary) -> void:
 	for key in dict:
 		GameState.set_flag(str(key), dict[key])
 
+
+
+func _apply_journal(raw: Variant) -> void:
+	var journal := get_node_or_null("/root/Journal")
+	if journal == null:
+		return
+	if typeof(raw) == TYPE_STRING and not raw.is_empty():
+		journal.discover(raw)
+	elif typeof(raw) == TYPE_ARRAY:
+		for entry_id in raw:
+			if typeof(entry_id) == TYPE_STRING and not entry_id.is_empty():
+				journal.discover(entry_id)
 
 func _finish() -> void:
 	is_active = false

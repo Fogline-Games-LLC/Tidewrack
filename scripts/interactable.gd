@@ -11,6 +11,7 @@ var dialogue_path: String = ""
 var dialogue_start: String = "start"
 var once: bool = false
 var color: Color = Color("#5b7f8c")
+@export var journal_entry_id: String = ""
 
 var _used: bool = false
 
@@ -40,5 +41,9 @@ func interact() -> void:
 		return
 	_used = true
 	interacted.emit(self)
+	if not journal_entry_id.is_empty():
+		var journal := get_node_or_null("/root/Journal")
+		if journal != null:
+			journal.discover(journal_entry_id)
 	if dialogue_path != "":
 		DialogueManager.start(dialogue_path, dialogue_start)
