@@ -16,7 +16,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/autoload/game_state.gd"
 DialogueManager="*res://scripts/autoload/dialogue_manager.gd"
-
+Journal="*res://scripts/journal.gd"
 [display]
 
 window/size/viewport_width=1280
